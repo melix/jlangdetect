@@ -19,22 +19,24 @@
 
 package com.lingway.ld;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * This class wraps several n-gram trees in order to detect languages. The detection algorithm is really
- * simple : it queries the registered gram trees, and returns the language associated with the one which
- * returns the best score.
- * 
- * Such an algorithm requires that the corpus used for training look as identical as possible. Parallel corpus
- * are good candidates.
+ * This class wraps several n-gram trees in order to detect languages. The detection algorithm is really simple : it
+ * queries the registered gram trees, and returns the language associated with the one which returns the best score.
+ * <p/>
+ * Such an algorithm requires that the corpus used for training look as identical as possible. Parallel corpus are good
+ * candidates.
  *
  * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class LangDetector {
+	private final static org.apache.log4j.Logger theLogger = org.apache.log4j.Logger.getLogger(LangDetector.class);
+	
 	private Map<String, GramTree> statsMap = new HashMap<String, GramTree>();
 
 	public LangDetector() {
@@ -55,20 +57,57 @@ public class LangDetector {
 		statsMap.put(lang, tree);
 	}
 
+	/**
+	 * Performs a language detection, but limits the detection to the set of provided languages. This is useful when the
+	 * detector has been trained with many languages, but you wish to discriminate between a smaller set of possible
+	 * languages (or, you know that the document is either in english or french).
+	 *
+	 * @param aText				the text for which to detect the language
+	 * @param languageRestrictions the set of languages the detector should be limited to
+	 * @return the detected language
+	 */
+	public String detectLang(CharSequence aText, Set<String> languageRestrictions) {
+		return detectLang(aText, false, languageRestrictions);
+	}
+
+	/**
+	 * Performs a language detection, using the whole set of possible languages.
+	 *
+	 * @param aText   the text for which to detect the language
+	 * @param explain if set to true, outputs debug information
+	 * @return the detected language
+	 */
 	public String detectLang(CharSequence aText, boolean explain) {
+		return detectLang(aText, explain, statsMap.keySet());
+	}
+
+	/**
+	 * Performs a language detection, but limits the detection to the set of provided languages. This is useful when the
+	 * detector has been trained with many languages, but you wish to discriminate between a smaller set of possible
+	 * languages (or, you know that the document is either in english or french).
+	 *
+	 * @param aText				the text for which to detect the language
+	 * @param explain			  if set to true, outputs debug information
+	 * @param languageRestrictions the set of languages the detector should be limited to
+	 * @return the detected language
+	 */
+	public String detectLang(CharSequence aText, boolean explain, Set<String> languageRestrictions) {
 		double best = 0;
 		String bestLang = null;
 		for (Map.Entry<String, GramTree> entry : statsMap.entrySet()) {
-			if (explain) {
-				System.out.println("---------- testing : "+entry.getKey()+" -------------");
-			}
-			double score = entry.getValue().scoreText(aText, explain);
-			if (explain) {
-				System.out.println("---------- result : "+entry.getKey()+" : "+score+" -------------");
-			}
-			if (score>best) {
-				best = score;
-				bestLang = entry.getKey();
+			final String currentLanguage = entry.getKey();
+			if (languageRestrictions.contains(currentLanguage)) {
+				if (explain) {
+					theLogger.info("---------- testing : " + currentLanguage + " -------------");
+				}
+				double score = entry.getValue().scoreText(aText, explain);
+				if (explain) {
+					theLogger.info("---------- result : " + currentLanguage + " : " + score + " -------------");
+				}
+				if (score > best) {
+					best = score;
+					bestLang = currentLanguage;
+				}
 			}
 		}
 		return bestLang;

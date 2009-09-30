@@ -17,9 +17,11 @@
  *
  */
 
-package test;
+package com.lingway.ld;
 
 import com.lingway.ld.LangDetector;
+import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 /**
  * User: cedric
  * Date: 21 sept. 2008
@@ -28,10 +30,11 @@ import com.lingway.ld.LangDetector;
 
 /**
  * A very simple test class.
- * todo : change this to TestNG test tree and make this a unit test
+ * // todo : add simple resources to classpath. Europarl is too big to be handled by VCS.
  */
 public class TestLangDetection {
-	public static void test(LangDetector detector) {
+
+	public void shouldDetectLanguages(LangDetector detector) {
 		String[][] texts = new String[][] {
 				new String[] {"un texte en français","fr"},
 				new String[] {"a text in english","en"},
@@ -59,6 +62,7 @@ public class TestLangDetection {
 		for (String[] text : texts) {
 			String det = detector.detectLang(text[0], false);
 			System.out.println("langof(\""+text[0]+"\") = " + det + " : " + (det.equals(text[1])?"OK":"Error"));
+			assertEquals(text[1], det);
 		}
 	}
 }
