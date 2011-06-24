@@ -17,7 +17,7 @@
  *
  */
 
-package com.lingway.ld;
+package me.champeau.ld;
 
 import java.util.Arrays;
 import java.io.Serializable;

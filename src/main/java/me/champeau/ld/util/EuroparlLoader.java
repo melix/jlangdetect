@@ -17,10 +17,10 @@
  *
  */
 
-package com.lingway.ld.util;
+package me.champeau.ld.util;
 
-import com.lingway.ld.GramTree;
-import com.lingway.ld.LangDetector;
+import me.champeau.ld.GramTree;
+import me.champeau.ld.LangDetector;
 
 import java.io.*;
 import java.util.concurrent.*;

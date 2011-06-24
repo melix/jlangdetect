@@ -17,10 +17,10 @@
  *
  */
 
-package com.lingway.ld;
+package com.champeau.ld;
 
-import com.lingway.ld.LangDetector;
-import org.testng.annotations.Test;
+import me.champeau.ld.LangDetector;
+
 import static org.testng.Assert.assertEquals;
 /**
  * User: cedric
