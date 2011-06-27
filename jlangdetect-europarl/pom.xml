@@ -37,7 +37,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.champeau</groupId>
+            <groupId>me.champeau.jlangdetect</groupId>
             <artifactId>jlangdetect</artifactId>
             <version>${project.version}</version>
         </dependency>

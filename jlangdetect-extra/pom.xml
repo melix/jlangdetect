@@ -36,7 +36,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.champeau</groupId>
+            <groupId>me.champeau.jlangdetect</groupId>
             <artifactId>jlangdetect-europarl</artifactId>
             <version>${project.version}</version>
         </dependency>
