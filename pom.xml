@@ -22,10 +22,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.champeau</groupId>
-	<artifactId>jlangdetect</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>jlangdetect-parent</artifactId>
+	<packaging>pom</packaging>
 	<version>0.3-SNAPSHOT</version>
-	<name>Java Language Detector</name>
+	<name>Java Language Detector parent project</name>
 
 	<developers>
 		<developer>
@@ -42,6 +42,10 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+
+    <modules>
+        <module>jlangdetect</module>
+    </modules>
 
 	<dependencies>
 		<dependency>
