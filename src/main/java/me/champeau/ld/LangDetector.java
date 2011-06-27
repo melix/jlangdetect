@@ -21,9 +21,7 @@ package me.champeau.ld;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class wraps several n-gram trees in order to detect languages. The detection algorithm is really simple : it
@@ -37,14 +35,14 @@ import java.util.Set;
 public class LangDetector {
 	private final static org.apache.log4j.Logger theLogger = org.apache.log4j.Logger.getLogger(LangDetector.class);
 	
-	private Map<String, GramTree> statsMap = new HashMap<String, GramTree>();
+	private Map<String, AbstractGramTree> statsMap = new HashMap<String, AbstractGramTree>();
 
 	public LangDetector() {
 	}
 
-	public void register(String lang, ObjectInputStream in) {
+    public void register(String lang, ObjectInputStream in) {
 		try {
-			statsMap.put(lang, (GramTree) in.readObject());
+			statsMap.put(lang, (AbstractGramTree) in.readObject());
 			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,32 +51,18 @@ public class LangDetector {
 		}
 	}
 
-	public void register(String lang, GramTree tree) {
+	public void register(String lang, AbstractGramTree tree) {
 		statsMap.put(lang, tree);
-	}
-
-	/**
-	 * Performs a language detection, but limits the detection to the set of provided languages. This is useful when the
-	 * detector has been trained with many languages, but you wish to discriminate between a smaller set of possible
-	 * languages (or, you know that the document is either in english or french).
-	 *
-	 * @param aText				the text for which to detect the language
-	 * @param languageRestrictions the set of languages the detector should be limited to
-	 * @return the detected language
-	 */
-	public String detectLang(CharSequence aText, Set<String> languageRestrictions) {
-		return detectLang(aText, false, languageRestrictions);
 	}
 
 	/**
 	 * Performs a language detection, using the whole set of possible languages.
 	 *
 	 * @param aText   the text for which to detect the language
-	 * @param explain if set to true, outputs debug information
 	 * @return the detected language
 	 */
-	public String detectLang(CharSequence aText, boolean explain) {
-		return detectLang(aText, explain, statsMap.keySet());
+	public String detectLang(CharSequence aText) {
+		return detectLang(aText, statsMap.keySet());
 	}
 
 	/**
@@ -86,23 +70,23 @@ public class LangDetector {
 	 * detector has been trained with many languages, but you wish to discriminate between a smaller set of possible
 	 * languages (or, you know that the document is either in english or french).
 	 *
-	 * @param aText				the text for which to detect the language
-	 * @param explain			  if set to true, outputs debug information
-	 * @param languageRestrictions the set of languages the detector should be limited to
-	 * @return the detected language
+	 *
+     * @param aText				the text for which to detect the language
+     * @param languageRestrictions the set of languages the detector should be limited to
+     * @return the detected language
 	 */
-	public String detectLang(CharSequence aText, boolean explain, Set<String> languageRestrictions) {
+	public String detectLang(CharSequence aText, Set<String> languageRestrictions) {
 		double best = 0;
 		String bestLang = null;
-		for (Map.Entry<String, GramTree> entry : statsMap.entrySet()) {
+		for (Map.Entry<String, AbstractGramTree> entry : statsMap.entrySet()) {
 			final String currentLanguage = entry.getKey();
 			if (languageRestrictions.contains(currentLanguage)) {
-				if (explain) {
-					theLogger.info("---------- testing : " + currentLanguage + " -------------");
+				if (theLogger.isDebugEnabled()) {
+					theLogger.debug("---------- testing : " + currentLanguage + " -------------");
 				}
-				double score = entry.getValue().scoreText(aText, explain);
-				if (explain) {
-					theLogger.info("---------- result : " + currentLanguage + " : " + score + " -------------");
+				double score = entry.getValue().scoreText(aText);
+				if (theLogger.isDebugEnabled()) {
+					theLogger.debug("---------- result : " + currentLanguage + " : " + score + " -------------");
 				}
 				if (score > best) {
 					best = score;
@@ -112,5 +96,59 @@ public class LangDetector {
 		}
 		return bestLang;
 	}
+
+    /**
+     * Returns the scores of each language profile for the given input text. The language detection is limited
+     * to the languages specified by the languageRestrictions parameter, and the resulting list is sorted by
+     * descending score.
+     * @param aText the text for which to detect score
+     * @param languageRestrictions the list of languages to be tested
+     * @return the scores for each language, sorted by descending score
+     */
+    public Collection<Score> scoreLanguages(CharSequence aText, Set<String> languageRestrictions) {
+        List<Score> scores = new LinkedList<Score>();
+        for (Map.Entry<String, AbstractGramTree> entry : statsMap.entrySet()) {
+            final String currentLanguage = entry.getKey();
+            if (languageRestrictions.contains(currentLanguage)) {
+                scores.add(new Score(currentLanguage,entry.getValue().scoreText(aText)));
+            }
+        }
+        Collections.sort(scores);
+        return scores;
+    }
+
+    /**
+     * Returns the scores of each language profile for the given input text. The resulting list is sorted by
+     * descending score.
+     * @param aText the text for which to detect score
+     * @return the scores for each language, sorted by descending score
+     */
+    public Collection<Score> scoreLanguages(CharSequence aText) {
+        return scoreLanguages(aText, statsMap.keySet());
+    }
+
+    public static class Score implements Comparable<Score> {
+        private final String language;
+        private final double score;
+
+        public Score(final String language, final double score) {
+            this.language = language;
+            this.score = score;
+        }
+
+        public int compareTo(final Score o) {
+            return Double.compare(o.score, score);
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("Score");
+            sb.append("{language='").append(language).append('\'');
+            sb.append(", score=").append(score);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
 }
 

@@ -17,10 +17,12 @@
  *
  */
 
-package me.champeau.ld.util;
+package me.champeau.ld.learn.util;
 
-import me.champeau.ld.GramTree;
+import me.champeau.ld.AbstractGramTree;
+import me.champeau.ld.GramTreeBuilder;
 import me.champeau.ld.LangDetector;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.concurrent.*;
@@ -28,19 +30,18 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 
-import test.TestLangDetection;
-
 /**
  * Parses the Europarl corpus (http://www.statmt.org/europarl/). This corpus consists of (parallel) translations
  * of European Parliament proceedings for the 1996-2006 period. It is a perfect candidate for our learning
  * algorithm, with up to 44 million words per language.
  *
- * Training takes less than 5 minutes on my computer, with a quad core processor. The loader has been optimized
+ * Training takes less than 1 minute/language on my computer, with a quad core processor. The loader has been optimized
  * for multi-core systems.
  *
  * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class EuroparlLoader {
+    private final static Logger theLogger = Logger.getLogger(EuroparlLoader.class);
 
 	/**
 	 * Reads a single EPPPC file, strips XML lines and returns a single string containing raw text.
@@ -59,7 +60,7 @@ public class EuroparlLoader {
 			}
 			reader.close();
 		} catch (IOException e) {
-			System.err.println("Unable to read file : " + aFile);
+			theLogger.error("Unable to read file : " + aFile);
 			return null;
 		}
 		return sb.toString();
@@ -72,17 +73,18 @@ public class EuroparlLoader {
 	 * @param langs list of languages to be compiled
 	 * @return the map of trees
 	 */
-	private static Map<String,GramTree> readCorpus(final File srcDir, final File dstDir, String[] langs) {
+	private static Map<String,AbstractGramTree> readCorpus(final File srcDir, final File dstDir, String[] langs) {
 		int threads = Runtime.getRuntime().availableProcessors();
 		ExecutorService service = Executors.newFixedThreadPool(threads);
-		System.out.println("Parallel processing of "+threads+" languages over "+langs.length+"...");
+		theLogger.info("Parallel processing of "+threads+" languages over "+langs.length+"...");
 		List<Future<?>> tasks = new LinkedList<Future<?>>();
-		final Map<String,GramTree> trees = new ConcurrentHashMap<String, GramTree>();
+		final Map<String,AbstractGramTree> trees = new ConcurrentHashMap<String, AbstractGramTree>();
 		for (final String lang : langs) {
 			tasks.add(service.submit(new Runnable() {
 				public void run() {
-					System.out.println("Processing directory " + lang);
-					GramTree tree = new GramTree(1, 3);
+					theLogger.info("Processing directory " + lang);
+					GramTreeBuilder tree = new GramTreeBuilder(1, 3);
+                    tree.setTruncationThreshold(0.1d);
 					File sourceFiles = new File(srcDir, lang);
 					File[] files = sourceFiles.listFiles();
 					int cpt = 0;
@@ -90,22 +92,21 @@ public class EuroparlLoader {
 						tree.learn(readSingleFile(file));
 						cpt++;
 						if (cpt % 20 == 0) {
-							System.out.println("Processed " + (100 * cpt / files.length) + "% of " + lang);
+							theLogger.info("Processed " + (100 * cpt / files.length) + "% of " + lang);
 						}
 					}
-					tree.compress();
-					trees.put(lang, tree);
-					System.out.println("Saving tree : "+lang);
+                    final AbstractGramTree build = tree.build();
+                    trees.put(lang, build);
+					theLogger.info("Saving tree : "+lang);
 					File dst = new File(dstDir, lang+"_tree.bin");
 					try {
 						ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(dst)));
-						out.writeObject(tree);
+						out.writeObject(build);
 						out.close();
 					} catch (IOException e) {
-						System.err.println("Unable to write lang tree "+lang);
-						e.printStackTrace();
+						theLogger.error("Unable to write lang tree "+lang,e);
 					}
-					System.out.println("Lang "+ lang+" complete !");
+					theLogger.info("Lang "+ lang+" complete !");
 				}
 			}));
 		}
@@ -123,9 +124,9 @@ public class EuroparlLoader {
 		return trees;
 	}
 
-	public static void main2(String[] args) {
+	public static void main(String[] args) {
 		if (args.length != 2) {
-			System.err.println("Usage : java " + EuroparlLoader.class.getCanonicalName() + " <sourcedir> <destdir>");
+			System.out.println("Usage : java " + EuroparlLoader.class.getCanonicalName() + " <sourcedir> <destdir>");
 			System.exit(-1);
 		}
 		File srcDir = new File(args[0]);
@@ -133,23 +134,21 @@ public class EuroparlLoader {
 		dstDir.mkdirs();
 		final String[] langs = srcDir.list();
 		LangDetector detector = new LangDetector();
-		Map<String,GramTree> trees = readCorpus(srcDir, dstDir, langs);
-		for (Map.Entry<String, GramTree> entry : trees.entrySet()) {
+		Map<String,AbstractGramTree> trees = readCorpus(srcDir, dstDir, langs);
+		for (Map.Entry<String, AbstractGramTree> entry : trees.entrySet()) {
 			detector.register(entry.getKey(), entry.getValue());
 		}
-
-		TestLangDetection.test(detector);
 	}
 
+    /**
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		File in = new File(args[0]);
 		LangDetector detector = new LangDetector();
 		for (File file : in.listFiles()) {
 			ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-			detector.register(file.getName().substring(0,2), (GramTree) ois.readObject());
+			detector.register(file.getName().substring(0,2), (AbstractGramTree) ois.readObject());
 			ois.close();
 		}
-		TestLangDetection.test(detector);
-	}
+	}**/
 
 }
