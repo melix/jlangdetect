@@ -40,6 +40,16 @@ public class LangDetector {
 	public LangDetector() {
 	}
 
+    /**
+     * Creates a language detector using the same language profiles as the provided detector.
+     * @param other the detector from which copy resources from.
+     */
+    protected LangDetector(LangDetector other) {
+        for (Map.Entry<String, AbstractGramTree> entry : other.statsMap.entrySet()) {
+            statsMap.put(entry.getKey(), entry.getValue());
+        }
+    }
+
     public void register(String lang, ObjectInputStream in) {
 		try {
 			statsMap.put(lang, (AbstractGramTree) in.readObject());

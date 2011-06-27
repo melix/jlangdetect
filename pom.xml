@@ -46,6 +46,7 @@
     <modules>
         <module>jlangdetect</module>
         <module>jlangdetect-europarl</module>
+        <module>jlangdetect-extra</module>
     </modules>
 
 	<dependencies>

@@ -6,15 +6,13 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- *
  */
 
 package com.champeau.ld;
@@ -22,9 +20,9 @@ package com.champeau.ld;
 import me.champeau.ld.AbstractGramTree;
 import me.champeau.ld.EuroparlDetector;
 import me.champeau.ld.LangDetector;
+import me.champeau.ld.UberLanguageDetector;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import static org.testng.Assert.assertEquals;
@@ -35,10 +33,9 @@ import static org.testng.Assert.assertEquals;
  */
 
 /**
- * A very simple test class aimed at testing that simple Europarl learning should be sufficient for regular
- * european languages.
+ * A very simple test class aimed at testing the UberLangDetector.
  */
-public class TestLangDetection {
+public class UberLanguageDetectionTest {
 
     @Test
 	public void shouldDetectLanguages() {
@@ -73,9 +70,18 @@ public class TestLangDetection {
 				new String[] {"Une première optimisation consiste à ne tester que les sous-chaînes de taille compatibles avec le lexique.", "fr"},
 				new String[] {"A otimização é a primeira prova de que não sub-canais compatível com o tamanho do léxico.", "pt"},
 				new String[] {"Ensimmäinen optimointi ei pidä testata, että osa-kanavien kanssa koko sanakirja.", "fi"},
+                new String[] {"您好", "zh"},
+                new String[] {"端午节", "zh"},
+                new String[] {"6月24日，欧盟成员国领导人任命意大利中央銀行行长馬里奧·德拉吉（图）為下一任歐洲中央銀行行長，以接替10月底离任的让-克洛德·特里谢。", "zh"},
+                new String[] {"ウィキペディアはオープンコンテントの百科事典です。方針に賛同していただけるなら、誰でも記事を編集したり新しく作成したりできます。ガイドブックを読んでから、サンドボックスで練習してみましょう。質問は利用案内でどうぞ", "ja"},
+                new String[] {"松本サリン事件（1994年）", "ja"},
+                new String[] {"В Госдуму внесён законопроект о службе в органах внутренних дел", "ru"},
+                new String[] {"Виктор Христенко назначен специальным представителем Президента по вопросу внесения изменений в Договор о Комиссии Таможенного союза", "ru"},
+                new String[] {"Виктор", "ru"},
+                new String[] {"여기로 연결됩니다. 다른 뜻에 대해서는", "ko"},
 		};
 
-        EuroparlDetector detector = EuroparlDetector.getInstance();
+        UberLanguageDetector detector = UberLanguageDetector.getInstance();
 
 		for (String[] text : texts) {
 			String det = detector.detectLang(text[0]);
@@ -87,12 +93,14 @@ public class TestLangDetection {
 
     @Test
     public void testScores() {
-        final Collection<LangDetector.Score> scores = EuroparlDetector.getInstance().scoreLanguages("马兜铃猪笼草是苏门答腊特有的热带食虫植物，其种加词“类似于马兜铃”，指该猪笼草捕虫笼的形状和颜色都非常近似于马兜铃的花朵。其生长于海拔1800至2500米的地区。1956年8月5日，威廉·梅哲在占碑省的土朱山上首次采集到了马兜铃猪笼草。但直到1988年约阿希姆·那兹访问莱顿大学植物标本馆后，该标本才被注意到。1994年，其最终被命名为马兜铃猪笼草。马兜铃猪笼草的叶片革质，无柄，呈线形、披针形或匙形－披针形，可长达20厘米，宽至5厘米。叶片末端为急尖或钝尖，中脉的两侧各有2条纵脉。羽状脉呈不规则的网状，笼蔓长达15厘米。马兜铃猪笼草的花序为总状花序，可长达30厘米。总花梗和花序轴都可长达15厘米，通常雌性花序较短。花梗具小苞片，带一朵花，可长达12毫米。马兜铃猪笼草已被列入《2006年世界自然保护联盟濒危物种红色名录》中，保护状况为极危。");
+        final Collection<LangDetector.Score> scores = UberLanguageDetector.getInstance().scoreLanguages(
+                "Виктор"
+        );
         System.out.println("scores = " + scores);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void shouldFailRegisteringLanguage() {
-        EuroparlDetector.getInstance().register("lang", new AbstractGramTree(0,0,0) {});
+        UberLanguageDetector.getInstance().register("lang", new AbstractGramTree(0,0,0) {});
     }
 }
