@@ -80,7 +80,7 @@ public class EuroparlDetector extends LangDetector {
         ClassLoader loader = EuroparlDetector.class.getClassLoader();
         for (String lang : EUROPARL_LANGUAGES) {
             try {
-                register(lang, new ObjectInputStream(new BufferedInputStream(loader.getResourceAsStream("europarl-ld/"+lang+"_tree.bin"))));
+                register(lang, new ObjectInputStream(new BufferedInputStream(loader.getResourceAsStream("europarl-ld/" +lang+"_tree.bin"))));
             } catch (IOException e) {
                 theLogger.warn("Unable to read Europarl resources for language "+lang);
             }
