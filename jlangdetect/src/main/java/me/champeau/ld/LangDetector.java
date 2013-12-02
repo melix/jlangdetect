@@ -19,6 +19,9 @@
 
 package me.champeau.ld;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.*;
@@ -33,7 +36,7 @@ import java.util.*;
  * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class LangDetector {
-	private final static org.apache.log4j.Logger theLogger = org.apache.log4j.Logger.getLogger(LangDetector.class);
+	private final static Logger theLogger = LoggerFactory.getLogger(LangDetector.class);
 	
 	private Map<String, AbstractGramTree> statsMap = new HashMap<String, AbstractGramTree>();
 
@@ -83,7 +86,7 @@ public class LangDetector {
 	 *
      * @param aText				the text for which to detect the language
      * @param languageRestrictions the set of languages the detector should be limited to
-     * @return the detected language
+     * @return the detected language or null if all scores are 0
 	 */
 	public String detectLang(CharSequence aText, Set<String> languageRestrictions) {
 		double best = 0;
@@ -148,6 +151,14 @@ public class LangDetector {
 
         public int compareTo(final Score o) {
             return Double.compare(o.score, score);
+        }
+
+        public String getLanguage() {
+            return language;
+        }
+
+        public double getScore() {
+            return score;
         }
 
         @Override
