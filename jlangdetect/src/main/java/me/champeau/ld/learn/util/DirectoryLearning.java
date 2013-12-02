@@ -20,7 +20,8 @@ package me.champeau.ld.learn.util;
 import me.champeau.ld.AbstractGramTree;
 import me.champeau.ld.GramTreeBuilder;
 import me.champeau.ld.LangDetector;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -42,7 +43,7 @@ import java.util.concurrent.*;
  * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class DirectoryLearning {
-    private final static Logger theLogger = Logger.getLogger(DirectoryLearning.class);
+    private final static Logger theLogger = LoggerFactory.getLogger(DirectoryLearning.class);
 
 	/**
 	 * Reads a single EPPPC file, strips XML lines and returns a single string containing raw text.

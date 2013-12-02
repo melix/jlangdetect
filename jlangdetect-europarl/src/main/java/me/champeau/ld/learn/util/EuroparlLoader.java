@@ -22,7 +22,8 @@ package me.champeau.ld.learn.util;
 import me.champeau.ld.AbstractGramTree;
 import me.champeau.ld.GramTreeBuilder;
 import me.champeau.ld.LangDetector;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.concurrent.*;
@@ -41,7 +42,7 @@ import java.util.Map;
  * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class EuroparlLoader {
-    private final static Logger theLogger = Logger.getLogger(EuroparlLoader.class);
+    private final static Logger theLogger = LoggerFactory.getLogger(EuroparlLoader.class);
 
 	/**
 	 * Reads a single EPPPC file, strips XML lines and returns a single string containing raw text.

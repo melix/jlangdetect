@@ -1,0 +1,12 @@
+##############################################
+#              Project JLangDetect           #
+# See http://code.google.com/p/jlangdetect/  #
+##############################################
+
+
+Changes in version 0.4
+----------------------
+
+Issue #1    switch from log4j to SLF4J
+Issue #4    Returns null if all scores are 0
+Issue #5    Make Score fields accessible

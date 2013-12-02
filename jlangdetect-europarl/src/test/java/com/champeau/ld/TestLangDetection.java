@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 /**
  * User: cedric
  * Date: 21 sept. 2008
@@ -86,9 +87,18 @@ public class TestLangDetection {
     }
 
     @Test
+    public void shouldReturnNullIfNoScore() {
+        EuroparlDetector detector = EuroparlDetector.getInstance();
+        String det = detector.detectLang("");
+        assertNull(det);
+    }
+
+    @Test
     public void testScores() {
         final Collection<LangDetector.Score> scores = EuroparlDetector.getInstance().scoreLanguages("马兜铃猪笼草是苏门答腊特有的热带食虫植物，其种加词“类似于马兜铃”，指该猪笼草捕虫笼的形状和颜色都非常近似于马兜铃的花朵。其生长于海拔1800至2500米的地区。1956年8月5日，威廉·梅哲在占碑省的土朱山上首次采集到了马兜铃猪笼草。但直到1988年约阿希姆·那兹访问莱顿大学植物标本馆后，该标本才被注意到。1994年，其最终被命名为马兜铃猪笼草。马兜铃猪笼草的叶片革质，无柄，呈线形、披针形或匙形－披针形，可长达20厘米，宽至5厘米。叶片末端为急尖或钝尖，中脉的两侧各有2条纵脉。羽状脉呈不规则的网状，笼蔓长达15厘米。马兜铃猪笼草的花序为总状花序，可长达30厘米。总花梗和花序轴都可长达15厘米，通常雌性花序较短。花梗具小苞片，带一朵花，可长达12毫米。马兜铃猪笼草已被列入《2006年世界自然保护联盟濒危物种红色名录》中，保护状况为极危。");
-        System.out.println("scores = " + scores);
+        for (LangDetector.Score score : scores) {
+            System.out.println("Score ["+score.getLanguage()+"]"+" = "+score.getScore());
+        }
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

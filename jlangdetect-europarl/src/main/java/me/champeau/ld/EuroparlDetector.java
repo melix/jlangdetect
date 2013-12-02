@@ -6,7 +6,9 @@ package me.champeau.ld;
  * Time: 22:35
  */
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -47,7 +49,7 @@ import java.io.ObjectInputStream;
  * @author Cedric Champeau
  */
 public class EuroparlDetector extends LangDetector {
-    private final static Logger theLogger = Logger.getLogger(EuroparlDetector.class);
+    private final static Logger theLogger = LoggerFactory.getLogger(EuroparlDetector.class);
 
     private final static String[] EUROPARL_LANGUAGES = {
             "bg",

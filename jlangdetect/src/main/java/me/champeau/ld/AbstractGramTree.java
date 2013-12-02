@@ -19,7 +19,8 @@
 
 package me.champeau.ld;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -33,7 +34,7 @@ import java.io.Serializable;
  * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public abstract class AbstractGramTree implements Serializable {
-private final static Logger theLogger = Logger.getLogger(AbstractGramTree.class);
+private final static Logger theLogger = LoggerFactory.getLogger(AbstractGramTree.class);
     
     private static final long serialVersionUID = 3284917449023378874L;
     protected AbstractNode root;

@@ -18,7 +18,6 @@
 package com.champeau.ld;
 
 import me.champeau.ld.AbstractGramTree;
-import me.champeau.ld.EuroparlDetector;
 import me.champeau.ld.LangDetector;
 import me.champeau.ld.UberLanguageDetector;
 import org.testng.annotations.Test;

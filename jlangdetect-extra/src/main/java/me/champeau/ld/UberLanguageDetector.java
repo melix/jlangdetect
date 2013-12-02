@@ -23,7 +23,9 @@ package me.champeau.ld;
  * Time: 09:51
  */
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -46,7 +48,7 @@ import java.io.ObjectInputStream;
  * 
  */
 public class UberLanguageDetector extends LangDetector {
-    private final static Logger theLogger = Logger.getLogger(UberLanguageDetector.class);
+    private final static Logger theLogger = LoggerFactory.getLogger(UberLanguageDetector.class);
 
     public final static String[] EXTRA_LANGUAGES = {"ru","zh","ja","ko"};
     private final static UberLanguageDetector INSTANCE = new UberLanguageDetector();
