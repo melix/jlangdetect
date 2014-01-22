@@ -30,7 +30,10 @@
 	<developers>
 		<developer>
 			<name>Cedric Champeau</name>
-			<url>http://www.jroller.com/melix</url>
+			<url>http://melix.github.io/blog</url>
+		</developer>
+		<developer>
+			<name>Freddy Rabiller</name>
 		</developer>
 	</developers>
 
