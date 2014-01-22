@@ -1,0 +1,73 @@
+= JLangDetect
+
+A language detection library for the JVM.
+
+== How to use it ?
+
+The simplest way to use JLangDetect is to use the _UberLanguageDetector_ singleton, available in the _jlangdetect-extra_ module :
+
+[source]
+----
+import  me.champeau.ld.UberLanguageDetector;
+UberLanguageDetector detector = UberLanguageDetector.getInstance();
+
+// ..
+
+String language = detector.detectLang("ceci est un petit texte en français");
+
+----
+
+
+Alternatively, if you don’t need to detect russian, chinese, japanese or korean languages, you can use the _EuroparlDetector_ available in the _jlangdetect-europarl_ module. Note that you can still create your own language detector and register custom languages using the core module.
+
+== Maven integration
+
+JLangDetect is now available through Maven. To use it, you can add the following repository into your _pom.xml_ file :
+
+[source,xml]
+----
+
+<repository>
+  <id>jlangdetect-googlecode</id>
+  <name>JLangDetect Maven repository</name>
+  <url>https://jlangdetect.googlecode.com/svn/repo</url>
+<repository>
+
+----
+
+
+Then use the following dependency :
+
+[source,xml]
+----
+<dependency>
+  <groupId>me.champeau.jlangdetect</groupId>
+  <artifactId>jlangdetect-extra</artifactId>
+  <version>0.4</version>
+</dependency>
+----
+
+
+== Use from Groovy
+
+As a last integration example, here is how to use it from Groovy, through a simple script :
+
+[source]
+----
+@GrabResolver('https://jlangdetect.googlecode.com/svn/repo')
+@Grab('me.champeau.jlangdetect:jlangdetect-extra:0.4')
+import me.champeau.ld.UberLanguageDetector as ULD
+
+ULD.instance.with {
+  assert detectLang('ceci est un petit texte en français') == 'fr'
+  assert detectLang('this is a text in english') == 'en'
+}
+
+----
+
+
+== Direct downloads
+
+* http://jlangdetect.googlecode.com/svn/repo/me/champeau/jlangdetect/jlangdetect/0.4/jlangdetect-0.4.jar[JLangDetect 0.4 (jar)]
+* http://jlangdetect.googlecode.com/svn/repo/me/champeau/jlangdetect/jlangdetect-europarl/0.4/jlangdetect-europarl-0.4.jar[JLangDetect Europarl 0.4 (jar)]
+* http://jlangdetect.googlecode.com/svn/repo/me/champeau/jlangdetect/jlangdetect-extra/0.4/jlangdetect-extra-0.4.jar[JLangDetect Extra 0.4 (jar)]
