@@ -1,4 +1,6 @@
-= JLangDetect
+== JLangDetect
+
+image::https://travis-ci.org/melix/jlangdetect.png?branch=master[Build Status, link="https://travis-ci.org/melix/jlangdetect"]
 
 A language detection library for the JVM.
 
