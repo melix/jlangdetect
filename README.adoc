@@ -33,7 +33,7 @@ JLangDetect is now available through Maven. To use it, you can add the following
   <id>jlangdetect-googlecode</id>
   <name>JLangDetect Maven repository</name>
   <url>https://jlangdetect.googlecode.com/svn/repo</url>
-<repository>
+</repository>
 
 ----
 
