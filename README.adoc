@@ -22,6 +22,8 @@ String language = detector.detectLang("ceci est un petit texte en français");
 
 Alternatively, if you don’t need to detect russian, chinese, japanese or korean languages, you can use the _EuroparlDetector_ available in the _jlangdetect-europarl_ module. Note that you can still create your own language detector and register custom languages using the core module.
 
+Keep in mind that this package requires SLF4J to be referenced. 
+
 == Maven integration
 
 JLangDetect is now available through Maven. To use it, you can add the following repository into your _pom.xml_ file :
