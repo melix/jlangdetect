@@ -150,7 +150,7 @@ public class LangDetector {
         }
 
         public int compareTo(final Score o) {
-            return Double.compare(o.score, score);
+            return Double.compare(score, o.score);
         }
 
         public String getLanguage() {
