@@ -17,7 +17,6 @@ import java.io.ObjectInputStream;
 /**
  * An extension of the language detector which automatically loads europarl resources from classpath, thus supports
  * detecting the language of documents in the following languages :
- * <p/
  * <ul>
  * <li>Bulgarian</li>
  * <li>Czech</li>
@@ -41,9 +40,9 @@ import java.io.ObjectInputStream;
  * <li>Slovene</li>
  * <li>Swedish</li>
  * </ul>
- * <p/>
+ * <p>
  * The detector has been trained thanks to the resources available from http://www.statmt.org/europarl/.
- * <p/>
+ * <p>
  * See Europarl: A Parallel Corpus for Statistical Machine Translation, Philipp Koehn, MT Summit 2005
  *
  * @author Cedric Champeau

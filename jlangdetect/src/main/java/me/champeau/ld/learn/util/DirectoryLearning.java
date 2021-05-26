@@ -40,7 +40,6 @@ import java.util.concurrent.*;
  * Training takes less than 1 minute/language on my computer, with a quad core processor. The loader has been optimized
  * for multi-core systems.
  *
- * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class DirectoryLearning {
     private final static Logger theLogger = LoggerFactory.getLogger(DirectoryLearning.class);

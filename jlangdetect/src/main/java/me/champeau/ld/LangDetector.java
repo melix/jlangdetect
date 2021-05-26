@@ -29,11 +29,10 @@ import java.util.*;
 /**
  * This class wraps several n-gram trees in order to detect languages. The detection algorithm is really simple : it
  * queries the registered gram trees, and returns the language associated with the one which returns the best score.
- * <p/>
+ * <p>
  * Such an algorithm requires that the corpus used for training look as identical as possible. Parallel corpus are good
  * candidates.
  *
- * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class LangDetector {
 	private final static Logger theLogger = LoggerFactory.getLogger(LangDetector.class);

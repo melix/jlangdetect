@@ -31,7 +31,6 @@ import java.io.Serializable;
  *
  * Not thread-safe.
  *
- * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public abstract class AbstractGramTree implements Serializable {
 private final static Logger theLogger = LoggerFactory.getLogger(AbstractGramTree.class);

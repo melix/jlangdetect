@@ -26,10 +26,9 @@ import java.util.*;
 /**
  * A gram tree is used to learn n-grams from texts, and is able to score a text. The n-gram data is represented as a
  * lexical tree. The representation is rather compact, but one could do better with annotated-DFAs.
- * <p/>
+ * <p>
  * Not thread-safe.
  *
- * @author Cedric CHAMPEAU<cedric-dot-champeau-at-laposte.net>
  */
 public class GramTreeBuilder extends AbstractGramTree {
 
