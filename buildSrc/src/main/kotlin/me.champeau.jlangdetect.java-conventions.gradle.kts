@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.champeau.jlangdetect"
-version = "0.6-SNAPSHOT"
+version = "0.6"
 
 java {
     withSourcesJar()
